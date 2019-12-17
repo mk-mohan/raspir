@@ -1,6 +1,5 @@
 FROM balenalib/raspberry-pi-debian:buster-build
 
-# apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'; \
 # Enable systemd
 ARG R_VERSION
 ARG BUILD_DATE
@@ -11,10 +10,6 @@ ENV R_VERSION=${R_VERSION:-3.6.1} \
 ENV INITSYSTEM on
 
 # install latest R
-## RUN echo "deb http://cran.rstudio.com/bin/linux/debian stretch-cran35/" >> /etc/apt/sources.list; \
-##    apt-get install dirmngr; \
-##    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'; \
-##    apt-get update && apt-get upgrade && apt-get install -y --no-install-recommends apt-utils
 
 RUN apt-get update && apt-get upgrade \ 
     && apt-get install -y galternatives openjdk-8-jdk
