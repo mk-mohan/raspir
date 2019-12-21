@@ -1,20 +1,6 @@
 FROM balenalib/raspberry-pi-debian:buster-build
 
-# Enable systemd
-ARG R_VERSION
-ARG BUILD_DATE
-ENV R_VERSION=${R_VERSION:-3.6.1} \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    TERM=xterm 
-ENV INITSYSTEM on
-
-# install latest R
-
-RUN apt-get update && apt-get upgrade \ 
-    && apt-get install -y galternatives openjdk-8-jdk
-
-RUN apt-get install -y --no-install-recommends \
+RUN install_packages galternatives openjdk-8-jdk \
     bash-completion \
     ca-certificates \
     file \
@@ -22,6 +8,7 @@ RUN apt-get install -y --no-install-recommends \
     g++ \
     gfortran \
     gsfonts \
+    default-jdk \
     libblas-dev \
     libbz2-1.0 \
     libcurl3-gnutls \
@@ -32,11 +19,12 @@ RUN apt-get install -y --no-install-recommends \
     libpcre3 \
     libpng16-16 \
     libreadline7 \
-    libtiff5 \
+    libtiff5-dev \
     liblzma5 \
     libxml2-dev \
     libcairo2-dev \
     libmariadbclient-dev \
+    libpango1.0-dev \
     libpq-dev \
     libssl-dev \
     libcurl4-openssl-dev \
@@ -45,12 +33,34 @@ RUN apt-get install -y --no-install-recommends \
     libgeos-dev \
     libgdal-dev \
     libproj-dev \
+    tcl8.6-dev \
+    tk8.6-dev \
+    texinfo \
+    texlive-extra-utils \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    texlive-latex-recommended \
+    xfonts-base \
     locales \
     make \
     unzip \
     zip \
-    zlib1g \
-  && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    perl \
+    xauth \
+    xvfb \
+    zlib1g 
+
+# Enable systemd
+ARG R_VERSION
+ARG BUILD_DATE
+ENV R_VERSION=${R_VERSION:-3.6.2} \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    TERM=xterm 
+ENV INITSYSTEM on
+
+# install latest R
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
   && locale-gen en_US.utf8 \
   && /usr/sbin/update-locale LANG=en_US.UTF-8 \
   && BUILDDEPS="curl \
@@ -142,3 +152,16 @@ RUN apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 ## CMD ["R"]
+RUN R -e "install.packages('later', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('fs', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('Rcpp', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('httpuv', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('mime', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('jsonlite', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('digest', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('htmltools', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('xtable', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('R6', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('Cairo', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('sourcetools', repos='http://cran.rstudio.com/', type='source')" && \
+    R -e "install.packages('shiny', repos='https://cran.rstudio.com/', type='source')"; 
