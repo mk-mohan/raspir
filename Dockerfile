@@ -1,24 +1,14 @@
-FROM upadrishta/raspi:2019-09-26
+FROM  upadrishta/raspi:buster-20190926
 
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y curl \
-    bash-completion \
-    ca-certificates \
-    gcc gfortran libreadline6-dev libx11-dev libxt-dev \
-    libpng-dev libjpeg-dev libcairo2-dev xvfb \
-    libbz2-dev libzstd-dev liblzma-dev \
-    libcurl4-openssl-dev libgfortran5 \
-    texinfo texlive texlive-fonts-extra \
-    screen wget openjdk-8-jdk
+RUN apt-get update 
 
-# Enable systemd
+# Enable vars and args
 ARG R_VERSION
 ARG BUILD_DATE
-ENV R_VERSION=${R_VERSION:-3.6.1} \
+ENV R_VERSION=${R_VERSION:-3.6.2} \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     TERM=xterm 
-ENV INITSYSTEM on
 
 # install latest R
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -89,25 +79,8 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
   && cd / \
   && rm -rf /tmp/* \
   ##&& apt-get remove --purge -y $BUILDDEPS \
-  && apt-get autoremove -y \
-  && apt-get autoclean -y 
-  ##&& rm -rf /var/lib/apt/lists/*
+  ##&& apt-get autoremove -y \
+  && apt-get autoclean -y \
+  && rm -rf /var/lib/apt/lists/*
 
-## CMD ["R"]
- 
-RUN R -e "install.packages('remotes', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "remotes::install_github('r-lib/later')" && \
-##  R -e "install.packages('later', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('httpuv', repos='http://cran.rstudio.com/', type='source')"
-##
-RUN R -e "install.packages('fs', repos='http://cran.rstudio.com/', type='source')" && \ 
-    R -e "install.packages('mime', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('jsonlite', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('digest', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('htmltools', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('xtable', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('R6', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('Cairo', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('sourcetools', repos='http://cran.rstudio.com/', type='source')" && \
-    R -e "install.packages('shiny', repos='https://cran.rstudio.com/', type='source')"; 
-##    R -e "install.packages('Rcpp', repos='http://cran.rstudio.com/', type='source')" && \  
+CMD ["R"]
