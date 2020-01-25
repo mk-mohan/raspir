@@ -20,7 +20,7 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
     gcc gfortran libreadline6-dev libx11-dev libxt-dev \
     libpng-dev libjpeg-dev libcairo2-dev xvfb \
     libbz2-dev libzstd-dev liblzma-dev \
-    libcurl4-openssl-dev libgfortran5 \
+    libcurl4-openssl-dev libgfortran5 libxml2-dev \
     texinfo texlive texlive-fonts-extra libssl-dev \
     screen wget openjdk-8-jdk" \
   && apt-get install -y --no-install-recommends $BUILDDEPS \
